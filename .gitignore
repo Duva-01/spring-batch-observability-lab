@@ -1,0 +1,13 @@
+# Maven
+target/
+# Logs
+*.log
+# IDEs / VS Code
+.idea/
+.vscode/
+# OS
+.DS_Store
+# Helm output
+charts/*.tgz
+# Minikube artefacts
+.kube/

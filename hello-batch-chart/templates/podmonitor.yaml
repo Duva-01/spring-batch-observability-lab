@@ -1,0 +1,17 @@
+{{- /* hello-batch-chart/templates/podmonitor.yaml */ -}}
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: hello-batch
+  labels:
+    release: monitoring               # ← el operator filtra por este label
+spec:
+  namespaceSelector:
+    matchNames: [ "{{ .Release.Namespace }}" ]
+  selector:
+    matchLabels:
+      app: hello-batch                # ← mismo label que pusiste en el Job
+  podMetricsEndpoints:
+    - port: http-metrics              # ← nombre del puerto definido en el Job
+      path: /actuator/prometheus
+      interval: 15s

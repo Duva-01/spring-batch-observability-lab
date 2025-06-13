@@ -1,0 +1,40 @@
+version: '3.9'
+
+services:
+  hello-batch:
+    build:
+      context: ../hello-batch
+    container_name: hello-batch
+    ports:
+      - "8081:8081"
+    networks: [ monitoring ]
+
+  prometheus:
+    image: prom/prometheus:v2.52.0
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+    networks: [ monitoring ]
+    depends_on: [ hello-batch ]
+
+  grafana:
+    image: grafana/grafana:10.4.2
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    volumes:
+      # provider YAML
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      # dashboards JSON
+      - ./grafana/dashboards-json:/var/lib/grafana/dashboards:ro
+      # datasource
+      - ./grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    networks: [ monitoring ]
+    depends_on: [ prometheus ]
+
+networks:
+  monitoring:

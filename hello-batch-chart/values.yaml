@@ -1,0 +1,4 @@
+image:
+  repository: hello-batch
+  tag: 0.1.2
+  pullPolicy: IfNotPresent
